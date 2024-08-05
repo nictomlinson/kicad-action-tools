@@ -40,7 +40,7 @@ class Snap2GridDlg ( wx.Dialog ):
 
 		m_comboBoxGridChoices = [ u"1.0mm   (39.37mils)", u"0.5mm   (19.69mils)", u"0.25mm   (9.84mils)", u"0.1mm     (3.94mils)", u"2.54mm  (100mils)", u"1.27mm    (50mils)", u"0.635mm  (25mils)", u"0.508mm  (20mils)", u"0.254mm  (10mils)", u"0.127mm   (5mils)" ]
 		self.m_comboBoxGrid = wx.ComboBox( self, wx.ID_ANY, u"1.0mm   (39.37mils)", wx.DefaultPosition, wx.Size( -1,-1 ), m_comboBoxGridChoices, 0 )
-		self.m_comboBoxGrid.SetSelection( 0 )
+		#self.m_comboBoxGrid.SetSelection( 0 )
 		bSizer31.Add( self.m_comboBoxGrid, 0, wx.ALL|wx.EXPAND, 5 )
 
 

@@ -13,20 +13,6 @@ import datetime
 import wx
 from pcbnew import *
 
-
-# Make snap2grid compatible with KiCAD 6.99
-if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
-    pass
-else: # kv7
-    wxPoint = VECTOR2I
-
-def getOrientation(fp):
-    o = fp.GetOrientation()
-    if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
-        return o / 10
-    else: # kv7
-        return o.AsDegrees()
-
 use_grid_origin = True
 gridReference = 0.127 #1.27 #mm pcbnew.FromMM(1.0) #0.1mm
 
@@ -84,7 +70,7 @@ def Snap2Grid(gridSizeMM,use_grid_origin):
             Value = str(module.GetValue())
             Value=(Value[:17] + '..') if len(Value) > 19 else Value
             Value="{0:<20}".format(Value)
-            Rotation='{0:.1f}'.format(getOrientation(module))
+            Rotation='{0:.1f}'.format((module.GetOrientation()/10))
             Rotation="{0:>6}".format(Rotation)+'  '
             if module.GetLayer() == 0:
                 Layer="  top"

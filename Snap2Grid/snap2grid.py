@@ -11,26 +11,12 @@
 ### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.2.3'
+__version__ = '1.2.2'
 import sys, os
 import pcbnew
 import datetime
 import wx
 from pcbnew import *
-
-# Make snap2grid compatible with KiCAD 6.99
-if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
-    pass
-else: # kv7
-    wxPoint = VECTOR2I
-
-def getOrientation(fp):
-    o = fp.GetOrientation()
-    if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
-        return o / 10
-    else: # kv7
-        return o.AsDegrees()
-    
 
 use_grid_origin = True
 
@@ -119,7 +105,8 @@ class snap_to_grid( pcbnew.ActionPlugin ):
         pcbnew_window = find_pcbnew_w()
         #aParameters = RoundTrackDlg(None)
         aParameters = Snap2Grid_Dlg(pcbnew_window)
-        gridIndex = aParameters.m_comboBoxGrid.FindString('0.1mm     (3.94mils)')
+        #gridIndex = aParameters.m_comboBoxGrid.FindString('0.1mm     (3.94mils)')
+        gridIndex = aParameters.m_comboBoxGrid.FindString('0.127mm   (5mils)')
         aParameters.m_comboBoxGrid.SetSelection(gridIndex)
         #aParameters.m_comboBoxGrid.Append('0.1mm (3.94mils)')
         aParameters.m_radioBtnGO.SetValue(True)
@@ -168,7 +155,7 @@ def snap2grid(gridSizeMM,use_grid):
                 #print(mpxOnG,mpyOnG)
                 locked=''
                 if not module.IsLocked():
-                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                    module.SetPosition(pcbnew.VECTOR2I(mpxOnG,mpyOnG))
                 else:
                     locked='LOCKED'
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
@@ -223,8 +210,8 @@ def snap2grid(gridSizeMM,use_grid):
             Value = str(module.GetValue())
             Value=(Value[:17] + '..') if len(Value) > 19 else Value
             Value="{0:<20}".format(Value)
-            Rotation='{0:.1f}'.format(getOrientation(module))
-            Rotation="{0:>6}".format(Rotation)+'  '
+            #Rotation='{0:.1f}'.format((module.GetOrientation()/10))
+            #Rotation="{0:>6}".format(Rotation)+'  '
             if module.GetLayer() == 0:
                 Layer="  top"
             else:
@@ -262,8 +249,8 @@ def snap2grid(gridSizeMM,use_grid):
             locked_fp+='\n'+'NOT Moved (Locked fp)'
             locked_fp+='\n'+info
             wxLogDebug(locked_fp,True)
-        else:
-            wxLogDebug(info,True)
+        #else:
+        #    wxLogDebug(info,True)
     else:
         wxLogDebug('No Modules Selected',True)
     Refresh()
